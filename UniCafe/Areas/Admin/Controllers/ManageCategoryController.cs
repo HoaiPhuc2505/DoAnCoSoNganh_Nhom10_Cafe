@@ -46,6 +46,16 @@ namespace UniCafe.Areas.Admin.Controllers
                 }
                 if (errors.Count == 0)
                 {
+                    category.Name = name;
+                    category.Slug = slug;
+                    category.Description = description;
+                    category.ParentId = string.IsNullOrEmpty(parentid) ? 0 : Convert.ToInt32(parentid);
+
+                    category.Status = (status == "on") ? 1 : 0;
+
+                    category.CreatedAt = DateTime.Now;
+                    category.UpdatedAt = DateTime.Now;
+
                     Add(category);
                 }
             }
@@ -83,6 +93,9 @@ namespace UniCafe.Areas.Admin.Controllers
                 var slug = formCollection["slug"];
                 var description = formCollection["description"];
                 var status = formCollection["status"];
+
+                var parentid = formCollection["parent_id"]; 
+
                 var checkSlug = Context.Categories.Count(x => x.Slug == slug);
                 var getCategoryContainsSlug = Context.Categories.FirstOrDefault(x => x.Slug == slug);
                 if (string.IsNullOrEmpty(name))
@@ -102,8 +115,11 @@ namespace UniCafe.Areas.Admin.Controllers
                     var category = GetById(Int32.Parse(formCollection["Id"]));
                     category.Name = name;
                     category.Slug = slug;
-                    category.Status = status;
+                    category.Status = (status == "on") ? 1 : 0;
                     category.Description = description;
+
+                    category.ParentId = string.IsNullOrEmpty(parentid) ? 0 : Convert.ToInt32(parentid);
+
                     category.UpdatedAt = DateTime.Now;
                     Update(category);
                 }

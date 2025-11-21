@@ -9,7 +9,7 @@ using UniCafe.Models;
 
 namespace UniCafe.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Staff")]
     public class ManageOrderController : BaseController<Order>
     {
         // GET: Admin/ManageOrder

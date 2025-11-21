@@ -36,7 +36,7 @@
                     Swal.fire('Có lỗi xảy ra khi thêm vào giỏ hàng!', data.message, 'error');
                 }
             });
-            
+
         });
     });
 </script>
@@ -52,8 +52,8 @@
                             </div>
                         </div>
                         @*<div class="slider slider-nav slick-shop-thumb">
-                            <div><img src="@Model.Image" alt="@Model.Name"></div>
-                        </div>*@
+                                <div><img src="@Model.Image" alt="@Model.Name"></div>
+                            </div>*@
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="300ms">
                         <input type="hidden" id="productId" value="@Model.Id" />
@@ -64,11 +64,11 @@
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="tag-wrap">
                                         <p><h5>Size</h5></p>
-                                        @foreach (var propertyProduct in ViewBag.PropertyProducts)
+                                        @foreach (var propertyProduct in (ViewBag.propertyProducts as List<UniCafe.Models.PropertyProduct>))
                                         {
                                             <input type="radio" id="propertyId_@propertyProduct.Id" name="propertyId" value="@propertyProduct.Id">
                                             <label>@propertyProduct.Name - @propertyProduct.Price.ToString("N0")đ</label><br>
-                                            
+
                                             @*<a href="#" class="tag-btn">@Model.Category</a>*@
                                         }
                                     </div>
@@ -76,7 +76,7 @@
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="tag-wrap">
                                         <p><h5>Topping</h5></p>
-                                        @foreach (var optionProduct in ViewBag.OptionProducts)
+                                        @foreach (var optionProduct in (ViewBag.optionProducts as List<UniCafe.Models.OptionProduct>))
                                         {
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="optionProducts[@optionProduct.Id]" id="optionProduct_@optionProduct.Id" value="@optionProduct.Id">
@@ -96,15 +96,15 @@
                         </div>
                         <a href="#" class="filter-btn btn-large" id="addToCart"><i class="fa fa-shopping-bag" aria-hidden="true"></i> Thêm vào giỏ hàng</a>
                         @*<div class="share-tag">
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="tag-wrap">
-                        <h5>Danh mục</h5>
-                        <a href="#" class="tag-btn">@Model.Category</a>
-                    </div>
-                </div>
-            </div>
-        </div>*@
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="tag-wrap">
+                                            <h5>Danh mục</h5>
+                                            <a href="#" class="tag-btn">@Model.Category</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                 <div class="tab-part">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
-                        <a href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-expanded="true">MÔ TẢ</a>
+                            <a href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-expanded="true">MÔ TẢ</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -128,6 +128,7 @@
                 </div>
             </div>
         </section>
+
         <section class="default-section wow fadeInDown animated" data-wow-duration="1000ms" data-wow-delay="300ms" style="visibility: visible; animation-duration: 1000ms; animation-delay: 300ms; animation-name: fadeInDown;">
             <div class="container">
                 <div class="title text-center">
@@ -135,170 +136,22 @@
                 </div>
                 <div class="product-wrapper">
                     <div class="owl-carousel owl-theme" data-items="4" data-tablet="3" data-mobile="2" data-nav="false" data-dots="true" data-autoplay="true" data-speed="1800" data-autotime="5000">
-                        @*@foreach (var item in ViewBag.ProductRelative)
+
+                        @* #### ĐÃ SỬA LẠI ĐƯỜNG DẪN ĐÚNG Ở ĐÂY #### *@
+                        @foreach (var item in (ViewBag.RelatedProducts as List<UniCafe.Models.Product>))
                         {
                             <div class="item">
                                 <div class="product-img">
-                                    <a href="/product/@item.Slug">
-                                        <img src="@item.Image" alt="">
+                                    <a href="@Url.Action("Details", "Product", new { Slug = item.Slug })">
+                                        <img src="@item.Image" alt="@item.Name">
                                         <span class="icon-basket fontello"></span>
                                     </a>
                                 </div>
-                                <h5>@item.Name</h5>
+                                <h5><a href="@Url.Action("Details", "Product", new { Slug = item.Slug })">@item.Name</a></h5>
                                 <span>@item.Price.ToString("N0")đ</span>
                             </div>
-                        }*@
+                        }
 
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-dao-cam-sa.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đào Cam Sả</h5>
-                            <span>$50.00</span><del>$70.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/bac-xiu.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Bạc Xỉu</h5>
-                            <span>$99.00</span><del>$120.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-den-matchiato.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đen Macchiato</h5>
-                            <span>$40.00</span><del>$55.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/ca-phe-sua-da.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Cà Phê Sữa Đá</h5>
-                            <span>$79.00</span><del>$99.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-dao-cam-sa.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đào Cam Sả</h5>
-                            <span>$50.00</span><del>$70.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/ca-phe-den-da.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Cà Phê Đen Đá</h5>
-                            <span>$99.00</span><del>$120.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-den-matchiato.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đen Macchiato</h5>
-                            <span>$40.00</span><del>$55.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-sen-nhan.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Long Nhãn Hạt Sen</h5>
-                            <span>$79.00</span><del>$99.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-dao-cam-sa.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đào Cam Sả</h5>
-                            <span>$50.00</span><del>$70.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/ca-phe-sua-da.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Cà Phê Sữa Đá</h5>
-                            <span>$99.00</span><del>$120.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-den-matchiato.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đen Macchiato</h5>
-                            <span>$40.00</span><del>$55.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-sen-nhan.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Long Nhãn Hạt Sen</h5>
-                            <span>$79.00</span><del>$99.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-dao-cam-sa.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Đào Cam Sả</h5>
-                            <span>$50.00</span><del>$70.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/ca-phe-sua-da.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Cà Phê Sữa Đá</h5>
-                            <span>$99.00</span><del>$120.00</del>
-                        </div>
-                        <div class="item">
-                            <div class="product-img">
-                                <a href="shop_single.html">
-                                    <img src="~/Content/Layout/User/images/tra-sen.jpg" alt="">
-                                    <span class="icon-basket fontello"></span>
-                                </a>
-                            </div>
-                            <h5>Trà Sen Vàng</h5>
-                            <span>$40.00</span><del>$55.00</del>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -306,7 +159,7 @@
     </div>
 </main>
 <script type="text/javascript">
-    // Plus number quantiy product detail 
+    // Plus number quantiy product detail
     var plusQuantity = function () {
         if (jQuery('input[name="quantity"]').val() != undefined) {
             var currentVal = parseInt(jQuery('input[name="quantity"]').val());
@@ -319,7 +172,7 @@
             console.log('error: Not see elemnt ' + jQuery('input[name="quantity"]').val());
         }
     }
-    // Minus number quantiy product detail 
+    // Minus number quantiy product detail
     var minusQuantity = function () {
         if (jQuery('input[name="quantity"]').val() != undefined) {
             var currentVal = parseInt(jQuery('input[name="quantity"]').val());

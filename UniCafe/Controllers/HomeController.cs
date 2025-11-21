@@ -6,7 +6,7 @@ using System.Web.Management;
 using System.Web.Mvc;
 using UniCafe.Data;
 using UniCafe.Models;
-
+using System.Configuration;
 namespace UniCafe.Controllers
 {
     public class HomeController : Controller
@@ -22,6 +22,7 @@ namespace UniCafe.Controllers
         }
         public ActionResult Index()
         {
+
             var showProducts = _context.Products.Where(c => c.Show == 1).ToList();
             //if (!User.Identity.IsAuthenticated)
             //{

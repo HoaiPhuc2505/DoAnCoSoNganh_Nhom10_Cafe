@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using UniCafe.Data;
 using UniCafe.Models;
 using System.Runtime.Caching;
+using System.Data.Entity;
 
 namespace UniCafe.Controllers
 {
@@ -32,11 +33,10 @@ namespace UniCafe.Controllers
 
             if (productList == null)
             {
-                // Nếu danh sách sản phẩm chưa có trong cache, truy vấn từ database và lưu vào cache
-                productList = GetAll().ToList(); // lấy danh sách sản phẩm từ database
+                productList = GetAll().ToList();
                 //productList = Context.Products.Where(s => s.Name == "123").ToList();
                 var cachePolicy = new CacheItemPolicy();
-                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1); // Thời gian sống của cache: 1 phút
+                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
                 _productCache.Set(cacheKey, productList, cachePolicy);
             }
             return productList;
@@ -51,19 +51,35 @@ namespace UniCafe.Controllers
             ViewBag.OptionProducts = _optionProductRepositoy.GetAll().ToList();
             return View(p);
         }
+
         [Route("Product/{Slug}")]
         public ActionResult Details(string Slug)
         {
             try
             {
-                ViewBag.PropertyProducts = Context.PropertityProducts.Where(x => x.Product.Slug == Slug).OrderBy(x => x.Price).ToList();
-                ViewBag.OptionProducts = Context.OptionProducts.Where(x => x.Product.Slug == Slug).ToList();
-                var product = Context.Products.FirstOrDefault(x => x.Slug == Slug);
-                if(product == null || Slug == null)
+                var product = Context.Products
+                                     .Include(p => p.Category)
+                                     .FirstOrDefault(x => x.Slug == Slug);
+
+                if (product == null || Slug == null)
                 {
                     return Redirect("/Collections/All");
                 }
-                //ViewBag.ProductRelative = Context.Products.Where(x => x.Category.Id == product.Category.Id).ToList();
+
+                ViewBag.propertyProducts = Context.PropertityProducts
+                                                .Where(x => x.Product.Slug == Slug)
+                                                .OrderBy(x => x.Price)
+                                                .ToList();
+
+                ViewBag.OptionProducts = Context.OptionProducts
+                                              .Where(x => x.Product.Slug == Slug)
+                                              .ToList();
+
+                ViewBag.RelatedProducts = Context.Products
+                                               .Where(p => p.Category.Id == product.Category.Id && p.Id != product.Id)
+                                               .Take(4) 
+                                               .ToList();
+
                 return View(product);
             }
             catch (Exception)

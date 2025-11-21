@@ -132,22 +132,26 @@ namespace UniCafe.Data
             {
                 var UserName = formCollection["UserName"];
                 var Password = formCollection["Password"];
-                var userStore = new UserStore<IdentityUser>();
-                var userManager = new UserManager<IdentityUser>(userStore);
-                var user = userManager.Find(UserName, Password);
+
+                var userStore = new UserStore<ApplicationUser>(_context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                var user = userManager.FindByName(UserName);
+
                 if (user != null)
                 {
-                    var authenticationManager = HttpContext.GetOwinContext().Authentication;
+                    var isPasswordCorrect = userManager.CheckPassword(user, Password);
 
-                    var userIdentity = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                    if (isPasswordCorrect)
+                    {
+                        var authenticationManager = HttpContext.GetOwinContext().Authentication;
+                        var userIdentity = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                        authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, userIdentity);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
 
-                    authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, userIdentity);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    errors.Add("Sai tài khoản hoặc mật khẩu");
-                }
+                errors.Add("Sai tài khoản hoặc mật khẩu");
             }
             catch (Exception ex)
             {

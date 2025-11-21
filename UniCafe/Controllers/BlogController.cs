@@ -17,7 +17,7 @@ namespace UniCafe.Controllers
         }
         public ActionResult Readmore(int id) {
             var blog = GetById(id);
-            if(blog == null || id==null) {
+            if(blog == null) {
                 return RedirectToAction("Index", "Blog");
             }
             return View(blog);
